@@ -22,27 +22,98 @@ class JobsFuel
                     ]
                 ),
                 new Column(
-                    'first_name',
+                    'lr_no',
                     [
-                        'type'          => Column::TYPE_VARCHAR,
-                        'size'          => 50,
+                        'type'          => Column::TYPE_INTEGER,
                         'notNull'       => true,
                     ]
                 ),
                 new Column(
-                    'last_name',
+                    'open_odo_reading',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'close_odo_reading',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'total_odo_reading',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'average',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'quantity',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'rate',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'amount',
+                    [
+                        'type'          => Column::TYPE_FLOAT,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'vendor_id',
+                    [
+                        'type'          => Column::TYPE_INTEGER,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'transfer_to_vehicle_id',
+                    [
+                        'type'          => Column::TYPE_INTEGER,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(//1 - purchase, 2 - transfer to another vehicle
+                    'type',
+                    [
+                        'type'          => Column::TYPE_TINYINTEGER,
+                        'notNull'       => false,
+                    ]
+                ),
+                new Column(
+                    'fuel_notes',
                     [
                         'type'          => Column::TYPE_VARCHAR,
-                        'size'          => 50,
-                        'notNull'       => true,
+                        'size'          => 1024,
+                        'notNull'       => false,
                     ]
-                )
+                ),
             ],
             'indexes' => [
                 new Index(
                     'column_UNIQUE',
                     [
-                        'last_name'
+                        'lr_no',
+                        'open_odo_reading',
+                        'close_odo_reading'
                     ],
                     'UNIQUE'
                 )
@@ -60,7 +131,9 @@ class JobsFuel
             new Index(
                 'column_INDEX',
                 [
-                    'first_name'
+                    'lr_no',
+                    'vendor_id',
+                    'type'
                 ],
                 'INDEX'
             )

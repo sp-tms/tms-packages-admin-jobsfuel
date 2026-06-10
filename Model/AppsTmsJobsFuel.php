@@ -8,7 +8,27 @@ class AppsTmsJobsFuel extends BaseModel
 {
     public $id;
 
-    public $first_name;
+    public $lr_no;
 
-    public $last_name;
+    public $open_odo_reading;
+
+    public $close_odo_reading;
+
+    public $total_odo_reading;
+
+    public $average;
+
+    public $quantity;
+
+    public $rate;
+
+    public $amount;
+
+    public $vendor_id;
+
+    public $transfer_to_vehicle_id;
+
+    public $type;
+
+    public $fuel_notes;
 }
