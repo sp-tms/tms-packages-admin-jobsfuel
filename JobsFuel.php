@@ -2,11 +2,12 @@
 
 namespace Apps\Tms\Packages\Jobs\Fuel;
 
+use Apps\Tms\Packages\Jobs\Fuel\Model\AppsTmsJobsFuel;
 use System\Base\BasePackage;
 
 class JobsFuel extends BasePackage
 {
-    //protected $modelToUse = ::class;
+    protected $modelToUse = AppsTmsJobsFuel::class;
 
     protected $packageName = 'jobsfuel';
 
@@ -14,58 +15,93 @@ class JobsFuel extends BasePackage
 
     public function init()
     {
-        //Note: If you want to use init function, you need to run parent::init as well.
-        //It is used by the use app database feature of the app.
-        //if you remove the init() function from this class, it is also fine.
         parent::init();
 
         return $this;
     }
 
-    public function getJobsFuelById($id)
-    {
-        $jobsfuel = $this->getById($id);
-
-        if ($jobsfuel) {
-            //
-            $this->addResponse('Success');
-
-            return;
-        }
-
-        $this->addResponse('Error', 1);
-    }
-
     public function addJobsFuel($data)
     {
-        //
+        if ($data['fuel_tx_type'] == '3') {//Transfer
+            if ($data['vehicle_id'] == $data['transfer_to_vehicle_id']) {
+                $this->addResponse('Can not transfer to self', 1);
+
+                return false;
+            }
+        }
+
+        if ($this->add($data)) {
+            $this->addResponse('Fuel added!', 0, ['newFuel' => $this->packagesData->last]);
+
+            return true;
+        }
+
+        $this->addResponse('Unable to add fuel', 1);
+
+        return false;
     }
 
     public function updateJobsFuel($data)
     {
-        $jobsfuel = $this->getById($id);
+        $fuel = $this->getById((int) $data['id']);
 
-        if ($jobsfuel) {
-            //
-            $this->addResponse('Success');
+        if (!$fuel) {
+            $this->addResponse('Fuel with ID not found!', 1);
 
-            return;
+            return false;
         }
 
-        $this->addResponse('Error', 1);
+        if ($this->update($data)) {
+            $this->addResponse('Fuel updated!', 0, ['updatedFuel' => $this->packagesData->last]);
+
+            return true;
+        }
+
+        $this->addResponse('Unable to update fuel', 1);
+
+        return false;
     }
 
     public function removeJobsFuel($data)
     {
-        $jobsfuel = $this->getById($id);
+        $fuel = $this->getById((int) $data['id']);
 
-        if ($jobsfuel) {
-            //
-            $this->addResponse('Success');
+        if (!$fuel) {
+            $this->addResponse('Fuel with ID not found!', 1);
 
-            return;
+            return false;
         }
 
-        $this->addResponse('Error', 1);
+        if ($this->remove((int) $data['id'])) {
+            $this->addResponse('Fuel removed!');
+
+            return false;
+        }
+
+        $this->addResponse('Unable to remove fuel', 1);
+
+        return false;
+    }
+
+    public function getFuelTransactionTypes()
+    {
+        return
+            [
+                '1' =>
+                    [
+                        'id' => '1',
+                        'name'  => 'Purchase (Cash)'
+                    ],
+                '2' =>
+                    [
+                        'id' => '2',
+                        'name'  => 'Purchase (Online)'
+                    ],
+                '3' =>
+                    [
+                        'id' => '3',
+                        'name'  => 'Transfer'
+                    ]
+            ];
     }
 }
